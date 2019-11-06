@@ -23,26 +23,18 @@ module.exports = (app) => {
     app.get('/livros', function(req, resp) {
         const livroDAO = new LivroDAO(db);
 
-        livroDAO.lista(function(erro, resultados) {
-            resp.marko(
-                require('../views/livros/lista/lista.marko'),
-
-                //listagem de livros dinâmica
-                {
-                    livros: resultados
-                }
-            );
-        });
-
-        // db.all('SELECT * FROM livros', function(erro, resultados) {
-        //     resp.marko(
-        //         require('../views/livros/lista/lista.marko'),
-
-        //         //listagem de livros dinâmica
-        //         {
-        //             livros: resultados
-        //         }
-        //     );
-        // });
+        livroDAO.lista()
+                .then(livros => 
+                    resp.marko(
+                        require('../views/livros/lista/lista.marko'),
+        
+                        //listagem de livros dinâmica
+                        {
+                            livros
+                        }
+                    )
+                )
+                .catch(erro => console.log(erro))
+    
     });
 }
