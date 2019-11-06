@@ -1,6 +1,11 @@
 const express = require('express');
 const app = express();
 
+require('marko/node-require').install();
+require('marko/express')
+
+// Adicionar e escrever sobre Marko
+
 const rotas = require('../app/rotas/rotas');
 rotas(app);
 

@@ -1,3 +1,5 @@
+const db = require('../../config/database')
+const LivroDAO = require('../infra/livro-dao');
 // É necessário exportar as rotas, uma vez que as mesmas
 // não teriam acesso à variável app nesse contexto.
 module.exports = (app) => {
@@ -18,18 +20,29 @@ module.exports = (app) => {
         );
     });
 
-    app.get('/livros', function(req, resp) { 
-        resp.send(
-            `
-                <html>
-                    <head>
-                        <meta charset="utf-8">
-                    </head>
-                    <body>
-                        <h1> Listagem de livros</h1>
-                    </body> 
-                </html>
-            `
-        );
+    app.get('/livros', function(req, resp) {
+        const livroDAO = new LivroDAO(db);
+
+        livroDAO.lista(function(erro, resultados) {
+            resp.marko(
+                require('../views/livros/lista/lista.marko'),
+
+                //listagem de livros dinâmica
+                {
+                    livros: resultados
+                }
+            );
+        });
+
+        // db.all('SELECT * FROM livros', function(erro, resultados) {
+        //     resp.marko(
+        //         require('../views/livros/lista/lista.marko'),
+
+        //         //listagem de livros dinâmica
+        //         {
+        //             livros: resultados
+        //         }
+        //     );
+        // });
     });
 }
