@@ -52,6 +52,15 @@ module.exports = (app) => {
                     )
                 )
                 .catch(erro => console.log(erro))
+    });
+
+    app.delete('/livros/:id', function(req, resp) {
+        // Recuperar informação (id)
+        const id = req.params.id;
     
+        const livroDAO = new LivroDAO(db);
+        livroDAO.remove(id)
+            .then(() => resp.status(200).end())
+            .catch(erro => console.log(erro));
     });
 }
