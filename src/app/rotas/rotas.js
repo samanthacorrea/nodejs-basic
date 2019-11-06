@@ -20,8 +20,25 @@ module.exports = (app) => {
         );
     });
 
-    app.get('/livros', function(req, resp) {
+    app.get('/livros/form', (req, resp) => {
+        resp.marko(require('../views/livros/form/form.marko'));
+    })
+
+    app.post('/livros', (req, resp) => {
+        console.log(req.body);
+        
+        //instância do bando de dados
         const livroDAO = new LivroDAO(db);
+
+        livroDAO.adiciona(req.body)
+                .then(resp.redirect('/livros'))
+                .catch(erro => console.log(erro))
+    
+    })
+
+    app.get('/livros', (req, resp) => {
+        const livroDAO = new LivroDAO(db);
+        console.log('listagem livros')
 
         livroDAO.lista()
                 .then(livros => 
