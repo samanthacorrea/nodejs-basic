@@ -77,4 +77,13 @@ module.exports = (app) => {
                 )
                 .catch(erro => console.log(erro));
     });
+
+    app.put('/livros', function(req, resp) {
+        console.log(req.body);
+        const livroDAO = new LivroDAO(db);
+        
+        livroDAO.atualiza(req.body)
+                .then(resp.redirect('/livros'))
+                .catch(erro => console.log(erro));
+    });
 }

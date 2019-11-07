@@ -1,5 +1,7 @@
 const express = require('express');
-const app = express();
+const app = express('method-override');
+
+const methodOverride = require('method-override')
 
 // Exemplos para ver a impressão dos logs no
 // console do terminal :)
@@ -25,6 +27,19 @@ const bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({
     extended: true
 }))
+
+// Esse middleware é utilizado para filtrar as requisições
+// que chegam na aplicação e verifica se existe ou não um
+// valor para id para que seja possível sobrescrever o 
+// método de envio da requisição.
+app.use(methodOverride(function (req, res) {
+    if (req.body && typeof req.body === 'object' && '_method' in req.body) {
+      // look in urlencoded POST bodies and delete it
+      var method = req.body._method;
+      delete req.body._method;
+      return method;
+    }
+  }));
 
 require('marko/node-require').install();
 require('marko/express')
