@@ -21,7 +21,7 @@ module.exports = (app) => {
     });
 
     app.get('/livros/form', (req, resp) => {
-        resp.marko(require('../views/livros/form/form.marko'));
+        resp.marko(require('../views/livros/form/form.marko'), { livro: {} });
     })
 
     app.post('/livros', (req, resp) => {
@@ -62,5 +62,19 @@ module.exports = (app) => {
         livroDAO.remove(id)
             .then(() => resp.status(200).end())
             .catch(erro => console.log(erro));
+    });
+
+    app.get('/livros/form/:id', function(req, resp) {
+        const id = req.params.id;
+        const livroDAO = new LivroDAO(db);
+
+        livroDAO.buscaPorId(id)
+                .then(livro => 
+                    resp.marko(
+                        require('../views/livros/form/form.marko'), 
+                        { livro: livro }
+                    )
+                )
+                .catch(erro => console.log(erro));
     });
 }

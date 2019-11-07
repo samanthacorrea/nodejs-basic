@@ -69,13 +69,76 @@ class LivroDAO {
             );
         });
     }
-    
-    // // Editar livro
-    // remove(livro) {
-    //     return new Promise((resolve, reject) => {
-    //         this._db.run()
-    //     });
-    // }
+
+    // // Atualiza livro
+    atualiza(livro) {
+        return new Promise((resolve, reject) => {
+            this._db.run(`
+                UPDATE livros SET
+                titulo = ?,
+                preco = ?,
+                descricao = ?
+                WHERE id = ?
+            `,
+            [
+                livro.titulo,
+                livro.preco,
+                livro.descricao,
+                livro.id
+            ],
+            erro => {
+                if (erro) {
+                    return reject('Não foi possível atualizar o livro!');
+                }
+
+                resolve();
+            });
+        });
+    }
+        atualiza(livro) {
+        return new Promise((resolve, reject) => {
+            this._db.run(`
+                UPDATE livros SET
+                titulo = ?,
+                preco = ?,
+                descricao = ?
+                WHERE id = ?
+            `,
+            [
+                livro.titulo,
+                livro.preco,
+                livro.descricao,
+                livro.id
+            ],
+            erro => {
+                if (erro) {
+                    return reject('Não foi possível atualizar o livro!');
+                }
+
+                resolve();
+            });
+        });
+    }
+
+    buscaPorId(id) {
+
+        return new Promise((resolve, reject) => {
+            this._db.get(
+                `
+                    SELECT *
+                    FROM livros
+                    WHERE id = ?
+                `,
+                [id],
+                (erro, livro) => {
+                    if (erro) {
+                        return reject('Não foi possível encontrar o livro!');
+                    }
+                    return resolve(livro);
+                }
+            );
+        });
+    }
 }
 
 module.exports = LivroDAO;
