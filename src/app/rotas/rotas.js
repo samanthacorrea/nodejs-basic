@@ -13,17 +13,27 @@ module.exports = (app) => {
                         <meta charset="utf-8">
                     </head>
                     <body>
-                        <h1> Casa do Código </h1>
+                        <h1> Bem-vindx ao exemplo básico de construção de uma API</h1>
+                        <h3>Rotas disponíveis</h3>
+                        <div>Formulário de cadastro de livro: <code>/livros/form</code></div>
+                        <div>Cadastro de livro: <code>/livros</code></div>
+                        <div>Lista de livros: <code>/livros</code></div>
+                        <div>Formulário de edição de um livro: <code>/livros/form/:id</code></div>
+                        <div>Atualiza dados de um livro: <code>/livros</code></div>
+                        <div>Exclui dados de um livro: <code>/livros/:id</code></div>
+                        
                     </body> 
                 </html>
             `
         );
     });
 
+    // Formulário de cadastro de livro
     app.get('/livros/form', (req, resp) => {
         resp.marko(require('../views/livros/form/form.marko'), { livro: {} });
-    })
+    });
 
+    // Cadastra um livro
     app.post('/livros', (req, resp) => {
         console.log(req.body);
         
@@ -34,11 +44,22 @@ module.exports = (app) => {
                 .then(resp.redirect('/livros'))
                 .catch(erro => console.log(erro))
     
-    })
+    });
 
+    // Edita dados de um livro
+    app.put('/livros', function(req, resp) {
+        console.log(req.body);
+        const livroDAO = new LivroDAO(db);
+        
+        livroDAO.atualiza(req.body)
+                .then(resp.redirect('/livros'))
+                .catch(erro => console.log(erro));
+    });
+
+    // Lista de livros
     app.get('/livros', (req, resp) => {
         const livroDAO = new LivroDAO(db);
-        console.log('listagem livros')
+        // console.log('listagem livros')
 
         livroDAO.lista()
                 .then(livros => 
@@ -54,6 +75,7 @@ module.exports = (app) => {
                 .catch(erro => console.log(erro))
     });
 
+    // Exclui livro
     app.delete('/livros/:id', function(req, resp) {
         // Recuperar informação (id)
         const id = req.params.id;
@@ -64,6 +86,7 @@ module.exports = (app) => {
             .catch(erro => console.log(erro));
     });
 
+    // Formulário de edição de um livro
     app.get('/livros/form/:id', function(req, resp) {
         const id = req.params.id;
         const livroDAO = new LivroDAO(db);
@@ -75,15 +98,6 @@ module.exports = (app) => {
                         { livro: livro }
                     )
                 )
-                .catch(erro => console.log(erro));
-    });
-
-    app.put('/livros', function(req, resp) {
-        console.log(req.body);
-        const livroDAO = new LivroDAO(db);
-        
-        livroDAO.atualiza(req.body)
-                .then(resp.redirect('/livros'))
                 .catch(erro => console.log(erro));
     });
 }
