@@ -16,6 +16,11 @@ Use a seguinte instrução para subir o servidor:
 Executar arquivo node:
 > node nome_do_arquivo.js
 
+Ou
+
+> npm start (não precisa reiniciar o server a cada alteração)
+
+
 Um módulo node é como uma biblioteca, ou seja, um conjunto de funcionalidades.
 
 Um arquivo com a extensão **.js** já é um módulo.
